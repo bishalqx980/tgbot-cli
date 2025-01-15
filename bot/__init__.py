@@ -1,33 +1,25 @@
 import os
 import json
-import logging
+import shutil
 
-with open('log.txt', 'w'):
-    pass
-
-#Enable logging
-logging.basicConfig(
-    filename="log.txt", format="%(asctime)s - %(name)s - %(levelname)s - %(lineno)d - %(filename)s - %(message)s", level=logging.INFO
-)
-#set higher logging level for httpx to avoid all GET and POST requests being logged
-logging.getLogger("httpx").setLevel(logging.WARNING)
-
-console = logging.StreamHandler()
-console.setLevel(logging.INFO)
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(lineno)d - %(filename)s - %(message)s")
-console.setFormatter(formatter)
-logging.getLogger("").addHandler(console)
-
-logger = logging.getLogger(__name__)
+# Creating Required Folder/Directories
+try:
+    for dir_name in ["downloads", "temp", "sys"]:
+        if os.path.exists(dir_name):
+            shutil.rmtree(dir_name)
+        os.makedirs(dir_name, exist_ok=True)
+except Exception as e:
+    print(e)
+    exit(1)
 
 # config
 if not os.path.exists("config.json"):
-    logger.error("Config file not found.")
+    print("Config file not found.")
 
     def get_value(prompt):
         value = input(f"{prompt}: ")
         if not value:
-            logger.error(f"{prompt} not provided.")
+            print(f"{prompt} not provided.")
             exit(1)
         return value
     
@@ -42,10 +34,10 @@ if not os.path.exists("config.json"):
             "VICTIM_CHAT_ID": int(victim_chat_id)
         }
     except TypeError:
-        logger.error("You have provided wrong variables.")
+        print("You have provided wrong variables.")
         exit(1)
     except Exception as e:
-        logger.error(e)
+        print(e)
         exit(1)
 
     with open("config.json", "w") as f:
@@ -56,7 +48,7 @@ CONFIG = {}
 with open("config.json", "r") as f:
     CONFIG.update(json.load(f))
 
-logger.info(
+print(
 """
 𝓐 𝓹𝓻𝓸𝓳𝓮𝓬𝓽 𝓸𝓯
 
